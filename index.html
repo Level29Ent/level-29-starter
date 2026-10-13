@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#251936"><link rel="icon" href="./assets/favicon.png" type="image/png"><title>Jester Rush | Level 29 Ent.</title><link rel="preconnect" href="https://api.fontshare.com"><link href="https://api.fontshare.com/v2/css?f[]=chillax@500,600,700&f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet"><link rel="stylesheet" href="./base.css"><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./enhancements.css"><link rel="stylesheet" href="./garage.css"></head>
+<body>
+<a class="skip" href="#main">Skip to game</a>
+<div id="world" aria-label="3D obstacle race"></div>
+<header class="topbar">
+  <a class="brand" href="#" aria-label="Level 29 Entertainment home"><img src="./assets/level29-logo.png" width="64" height="64" alt="Level 29 purple, green and gold jester logo"><span>LEVEL 29<small>ENTERTAINMENT</small></span></a>
+  <div class="top-actions"><span class="build-label">JESTER RUSH / ONLINE ARENA</span><label class="quality-label" for="quality">Graphics</label><select id="quality" aria-label="Graphics quality"><option value="balanced">Balanced</option><option value="high">High</option><option value="performance">Performance</option></select><button id="theme" class="icon-btn" aria-label="Switch color theme" title="Switch color theme">◐</button><button id="sound" class="icon-btn" aria-label="Turn sound off" title="Toggle sound">Sound on</button></div>
+</header>
+<main id="main">
+<section id="menu" class="lobby">
+  <div class="lobby-copy"><div class="eyebrow"><span class="status-dot"></span> THE LEVEL 29 PLAYGROUND</div><h1>JESTER<br><span>RUSH.</span></h1><p class="tagline">Big jumps. Bad decisions.<br>One glorious finish line.</p>
+  <div class="play-panel"><div class="panel-heading"><h2>Make your entrance.</h2><span>12 RACERS</span></div>
+  <div class="profile-bar"><button id="closet-btn">Garage &amp; shop <span>100 styles ↗</span></button><button id="profile-btn" aria-label="Open saved profile"><span class="coin-dot"></span><strong id="wallet">0</strong> CASH</button></div>
+  <p id="preview-save-note" class="micro" hidden>Preview saves: open CASH and copy your private recovery key before closing or reloading. Restore it there to continue your racer.</p>
+  <label for="name">Racer name</label><input id="name" maxlength="18" value="Player 29" autocomplete="off">
+  <fieldset class="colors"><legend>Your colors</legend><button class="swatch selected" data-color="0" aria-label="Purple jester" aria-pressed="true" style="--swatch:#9359ed"></button><button class="swatch" data-color="1" aria-label="Green jester" aria-pressed="false" style="--swatch:#a6e958"></button><button class="swatch" data-color="2" aria-label="Gold jester" aria-pressed="false" style="--swatch:#ffcd58"></button><button class="swatch" data-color="3" aria-label="Pink jester" aria-pressed="false" style="--swatch:#ff7b9a"></button><span id="color-name">Royal trouble</span></fieldset>
+  <label for="course">Pick your playground</label><select id="course"><option value="sky">Skyline Shuffle</option><option value="sunset">Golden Hour</option><option value="carnival">Jester Carnival</option></select>
+  <button id="online-btn" class="primary">PLAY ONLINE <span>↗</span></button><p class="micro">Real players. No bots. Matchmaking starts with 2+ racers.</p>
+  <div class="party-actions"><button id="create-btn" class="secondary">Private party</button><button id="join-btn" class="secondary">Join with code</button></div>
+  <button id="start-btn" class="practice-btn">Practice with bots <span>↗</span></button>
+  <form id="join-form" hidden><label for="room-code">8-character party code</label><div class="join-row"><input id="room-code" maxlength="8" placeholder="ABCDEFGH" autocomplete="off"><button class="secondary" type="submit">Join</button></div></form>
+  <p id="menu-error" class="error" role="alert"></p><button id="browse-btn" class="text-btn browse-btn">Browse open rooms</button>
+  </div></div>
+  <aside class="hero-side"><div class="hero-sticker"><span>NO CROWN.<br>NO GLORY.</span><small>GO GET YOURS.</small></div><div class="course-caption"><span class="caption-index">01 /</span><div><strong>Chaos, with a view.</strong><span>Floating tracks. Spinning trouble. Your rules.</span></div></div></aside>
+  <footer class="lobby-footer"><span>ORIGINAL GAME BY LEVEL 29 ENT.</span><button id="how-btn">How to play <span>↗</span></button><span class="footer-note">ONLINE PARTIES + BOT RACES</span></footer>
+</section>
+<section id="party" class="overlay" hidden><div class="modal party-modal"><img src="./assets/level29-logo.png" class="modal-logo" width="80" height="80" alt="Level 29 jester"><div class="eyebrow">THE CREW IS ASSEMBLING</div><h2>Good company.<br>Questionable coordination.</h2><p id="party-description">Share this code with your friends and race head-to-head.</p><div class="code-box"><strong id="party-code">-----</strong><button id="copy-code" class="secondary">Copy code</button></div><div class="party-meta"><span id="party-course"></span><span id="party-count"></span></div><div id="party-roster"></div><p id="matchmaking-status" class="micro">Player-versus-player room. No bot opponents.</p><p id="party-error" class="error" role="alert"></p><button id="launch-btn" class="primary">START THE CHAOS <span>↗</span></button><button id="leave-party" class="text-btn">Leave party</button></div></section>
+<section id="room-browser" class="overlay" hidden><div class="modal"><div class="eyebrow">FIND YOUR NEXT RIVAL</div><h2>Open playgrounds.</h2><p>Join another player’s public room. Private party codes are never listed here.</p><div id="open-rooms"></div><p id="rooms-error" class="error" role="alert"></p><button id="refresh-rooms" class="secondary">Refresh rooms</button><button id="close-rooms" class="text-btn">Back to playground</button></div></section>
+<section id="create-dialog" class="overlay" hidden><div class="modal"><div class="eyebrow">YOUR CREW. YOUR CHAOS.</div><h2>Create a private party.</h2><p>Up to 12 players can join with your room code. Player-versus-player races require at least two connected racers.</p><label class="checkbox-row"><input type="checkbox" id="fill-bots"> Add clearly labeled bots to empty spots</label><button id="confirm-create" class="primary">CREATE ROOM <span>↗</span></button><button id="cancel-create" class="text-btn">Cancel</button></div></section>
+<section id="hud" hidden><div class="hud-top"><div class="hud-card"><span id="race-course">SKYLINE SHUFFLE</span><strong>RACE TO THE FINISH</strong><small id="race-cash">+0 CASH</small></div><div class="hud-card stats"><span>POSITION <strong id="position">1 / 12</strong></span><span>TIME <strong id="timer">00:00</strong></span></div><button id="exit-btn" class="icon-btn">Leave race</button></div><div class="race-progress"><div id="progress-fill"></div><span id="checkpoint-label">START</span></div><div id="countdown" aria-live="polite"></div><div id="toast" aria-live="polite"></div><div class="hud-bottom"><div class="control-hint"><kbd>W A S D</kbd> move <kbd>SPACE</kbd> jump <kbd>SHIFT</kbd> dash</div><div id="dash-meter"><span>DASH READY</span><div><i></i></div></div></div><div id="touch-controls"><div id="joystick" role="group" aria-label="Movement joystick"><div class="stick-label">MOVE</div><div id="stick-knob"></div></div><div class="touch-actions"><button id="touch-dash">Dash</button><button id="touch-jump">Jump</button></div></div><p id="connection" role="status"></p></section>
+<section id="garage" class="overlay" hidden><div class="garage-shell"><aside class="garage-sidebar"><img src="./assets/level29-logo.png" width="90" height="100" alt="Level 29 jester"><div class="eyebrow">YOUR LEVEL 29 LOCKER</div><h2>Dress for<br>the chaos.</h2><div class="garage-cash"><span class="coin-dot"></span><strong id="garage-wallet">0</strong><span>CASH</span></div><p>Earn virtual cash on the track. Your items, upgrades, equipped look, and race stats save to your profile.</p><div class="garage-stats"><span>RACES <strong id="stat-races">0</strong></span><span>WINS <strong id="stat-wins">0</strong></span><span>OWNED <strong id="stat-owned">4 / 100</strong></span></div><button id="save-profile-btn" class="secondary">Save / recover profile</button><button id="close-garage" class="primary">BACK TO THE TRACK <span>↗</span></button></aside><div class="garage-content"><div class="garage-tabs" role="tablist" aria-label="Shop category"><button data-shop-tab="outfit" role="tab" aria-selected="true">Outfits <small>40</small></button><button data-shop-tab="hat" role="tab" aria-selected="false">Hats <small>20</small></button><button data-shop-tab="shoes" role="tab" aria-selected="false">Shoes <small>20</small></button><button data-shop-tab="pack" role="tab" aria-selected="false">Packs <small>20</small></button><button data-shop-tab="upgrades" role="tab" aria-selected="false">Upgrades</button></div><p id="shop-error" class="error" role="alert"></p><div id="shop-grid"></div></div></div></section>
+<section id="profile-dialog" class="overlay" hidden><div class="modal"><div class="eyebrow">YOUR CASH. YOUR COLLECTION.</div><h2>Your saved racer.</h2><p>Progress saves automatically on the server. Keep your private recovery key to restore your profile on another device. Anyone with this key can use your profile, so don’t share it.</p><button id="show-recovery" class="secondary recovery-button">Show my recovery key</button><div id="recovery-box" hidden><label for="recovery-key">Private recovery key</label><input id="recovery-key" readonly autocomplete="off"><button id="copy-recovery" class="secondary">Copy key</button></div><form id="recover-form"><label for="recover-input">Restore an existing profile</label><input id="recover-input" placeholder="Paste your private recovery key" autocomplete="off" type="password"><button class="secondary" type="submit">Restore profile</button></form><p id="profile-storage-note" class="micro">Profiles currently use server-side storage. Keep your recovery key; hosting changes can affect locally stored saves.</p><p id="profile-error" class="error" role="alert"></p><button id="close-profile" class="primary">DONE <span>↗</span></button></div></section>
+<section id="results" class="overlay" hidden><div class="modal results-modal"><img src="./assets/rush-art.webp" alt="" class="result-art"><div class="eyebrow">THAT WAS BEAUTIFUL CHAOS</div><h2 id="result-title">Finish line energy.</h2><p id="result-subtitle"></p><div id="leaderboard"></div><p id="rematch-error" class="error" role="alert"></p><button id="again-btn" class="primary">REMATCH THE CREW <span>↗</span></button><button id="home-btn" class="text-btn">Back to playground</button></div></section>
+<section id="instructions" class="overlay" hidden><div class="modal"><div class="eyebrow">A LITTLE METHOD TO THE MADNESS</div><h2>Stay on track.<br>Mostly.</h2><ul class="instruction-list"><li><strong>Move</strong><span>WASD or arrow keys. On mobile, use the analog joystick.</span></li><li><strong>Jump</strong><span>Space or Jump. Clear gaps and spinning bars. A short jump buffer makes edge jumps more forgiving.</span></li><li><strong>Dash</strong><span>Shift or Dash. Burst forward, even in mid-air. Recharges in 2.8 seconds.</span></li><li><strong>Boost</strong><span>Run over gold arrow pads for a speed boost. Avoid moving gates and padded bumpers.</span></li><li><strong>Recover</strong><span>Falling returns you to your last checkpoint. Keep going.</span></li><li><strong>Play online</strong><span>Match with real players or create a private party. Public races never add bots. Rematches keep the same group.</span></li></ul><p>Cross the finish line before the 90-second timer ends. Three courses offer different layouts and hazards.</p><button id="close-how" class="primary">LET’S GO <span>↗</span></button></div></section>
+<div id="loading" class="overlay" hidden><div class="loading-content"><img src="./assets/rush-art.webp" alt="" width="320" height="180"><h2>Warming up the chaos.</h2><p>Connecting to the race server…</p></div></div>
+</main><div id="debug">3D engine loading</div><script type="module" src="./app.js"></script><script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://perplexity.localhost","http://localhost:1420","http://127.0.0.1:1420","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  const DEFAULT_LINE_HEIGHT = 16;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  const PICK_CAPABILITIES = ["pick"];
+  const PICK_CHAIN_LENGTH = 4;
+  const PICK_MAX_TEXT_CHARS = 120;
+  const PICK_MAX_HTML_CHARS = 300;
+
+  function truncate(value, maxChars) {
+    return value.length > maxChars ? value.slice(0, maxChars - 1) + "…" : value;
+  }
+
+  function isPickableElement(element) {
+    return (
+      element instanceof Element &&
+      element !== document.documentElement &&
+      element !== document.body
+    );
+  }
+
+  function resolvePickTarget(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    const element = document.elementFromPoint(x, y);
+    return isPickableElement(element) ? element.closest("svg") || element : null;
+  }
+
+  function pickLabel(element) {
+    if (element.id) return element.localName + "#" + element.id;
+    return [element.localName].concat(Array.from(element.classList).slice(0, 2)).join(".");
+  }
+
+  // Only attributes that help find the element in source. data-* values and URL
+  // query strings or fragments can carry tokens.
+  const PICK_ATTRIBUTES = new Set([
+    "id",
+    "class",
+    "name",
+    "type",
+    "role",
+    "alt",
+    "aria-label",
+    "href",
+    "src",
+  ]);
+
+  function pickAttributeValue(attribute) {
+    return attribute.name === "href" || attribute.name === "src"
+      ? attribute.value.split(/[?#]/)[0]
+      : attribute.value;
+  }
+
+  function describePickElement(element) {
+    const chain = [];
+    for (
+      let current = element;
+      isPickableElement(current) && chain.length < PICK_CHAIN_LENGTH;
+      current = current.parentElement
+    ) {
+      chain.unshift(current);
+    }
+    const attributes = Array.from(element.attributes)
+      .filter((attribute) => PICK_ATTRIBUTES.has(attribute.name))
+      .map((attribute) => ` ${attribute.name}="${pickAttributeValue(attribute).replace(/"/g, "&quot;")}"`)
+      .join("");
+    const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
+    return {
+      chain: chain.map(pickLabel),
+      html: truncate(`<${element.localName}${attributes}>`, PICK_MAX_HTML_CHARS),
+      text: text ? truncate(text, PICK_MAX_TEXT_CHARS) : undefined,
+    };
+  }
+
+  // Hover asks once per frame, and innerText on a large section forces layout,
+  // so only the rect is re-read while the pointer stays on the same element.
+  // Clicks ask for fresh details since the page may have changed the element.
+  let lastPick = null;
+
+  function describePickTarget(element, fresh) {
+    if (fresh || lastPick?.element !== element) {
+      lastPick = { element, details: describePickElement(element) };
+    }
+    const rect = element.getBoundingClientRect();
+    return {
+      rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+      ...lastPick.details,
+    };
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+      capabilities: PICK_CAPABILITIES,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_PICK") {
+      const element = resolvePickTarget(event.data.x, event.data.y);
+      postToTrustedTop({
+        type: "INLINE_EDIT_PICK_RESULT",
+        seq: event.data.seq,
+        target: element ? describePickTarget(element, event.data.fresh === true) : null,
+      });
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_BY") {
+      const { deltaX, deltaY, deltaMode } = event.data;
+      if (!scrollForwarding || !Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return;
+      if (deltaMode !== 0 && deltaMode !== 1 && deltaMode !== 2) return;
+      const lineHeight =
+        parseFloat(getComputedStyle(document.documentElement).lineHeight) || DEFAULT_LINE_HEIGHT;
+      const scaleX = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerWidth : 1;
+      const scaleY = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerHeight : 1;
+      // The selection overlay receives the wheel event instead of this iframe.
+      // Instant scrolling preserves trackpad deltas even on smooth-scroll sites.
+      window.scrollBy({ left: deltaX * scaleX, top: deltaY * scaleY, behavior: "instant" });
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script></body></html>
