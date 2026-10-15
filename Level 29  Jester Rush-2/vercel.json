@@ -1,0 +1,8 @@
+{
+  "framework": null,
+  "buildCommand": "node build-profiles.mjs",
+  "installCommand": "",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false
+}
