@@ -1,6 +1,23 @@
 'use strict';
 import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
 
+(function(w,d){
+  'use strict';
+  // Web only: native game builds keep their existing privacy/ads integration.
+  if(!/^https?:$/.test(w.location.protocol)||w.Capacitor?.isNativePlatform?.())return;
+  try{if(w.top!==w&&w.top.__level29GTM==='GTM-MTKR4ZCD')return;}catch(_){/* Cross-origin frames cannot inspect their parent. */}
+  if(w.__level29GTM==='GTM-MTKR4ZCD')return;
+  w.__level29GTM='GTM-MTKR4ZCD';
+  w.dataLayer=w.dataLayer||[];
+  w.gtag=w.gtag||function(){w.dataLayer.push(arguments);};
+  // The site's CMP must update consent; loading the container does not grant it.
+  if(!w.google_tag_data?.ics)w.gtag('consent','default',{ad_storage:'denied',analytics_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});
+  w.gtag('js',new Date());
+  w.dataLayer.push({'gtm.start':Date.now(),event:'gtm.js'});
+  var script=d.createElement('script');script.async=true;script.src='https://www.googletagmanager.com/gtm.js?id=GTM-MTKR4ZCD';
+  d.head.appendChild(script);
+})(window,document);
+
 let hasRemovedAds = localStorage.getItem('remove_ads') === 'true';
 // =====================================================================
 // LEVEL 29 · BLOOD IN THE BAYOU — first-person open-world zombie action
